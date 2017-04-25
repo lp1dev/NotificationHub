@@ -1,0 +1,24 @@
+{
+  "name": "notification-hub",
+  "version": "0.0.1",
+  "description": "A global notification hub",
+  "main": "server.js",
+  "dependencies": {
+    "deepstream.io-client-js": "^2.1.4",
+    "express": "^4.15.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lp1dev/NotificationHub.git"
+  },
+  "author": "Jeremie Amsellem",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lp1dev/NotificationHub/issues"
+  },
+  "homepage": "https://github.com/lp1dev/NotificationHub#readme"
+}

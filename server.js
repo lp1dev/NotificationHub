@@ -1,8 +1,9 @@
 #!/usr/bin/node
 
 (function (){
-    var version = 0.01
     //constants
+    const version       = 0.01
+    const queue_size    = 10;
     const deepstream    = require('deepstream.io-client-js')
     const express       = require('express')
     const usage         = function(){
@@ -16,17 +17,17 @@
     
     //deepstreamhub
     ds.login()
-    var messageQueue = [{toto:42}]
-    var record = ds.record.getRecord('test')
-    emitInterval = setInterval(function() {
+    var messageQueue    = []
+    var record          = ds.record.getRecord('test')
+    emitInterval        = setInterval(function() {
         record.set({
             messageQueue: messageQueue
         })
     }, 1000)
-
+    
     //express
-    var app = express()
-    var port = process.argv[3]
+    var app         = express()
+    var port        = process.argv[3]
     
     if (isNaN(parseFloat(port)) || !isFinite(port)){
         port = 3000;
@@ -39,7 +40,10 @@
     app.post('/message/:uri/:message', function(req, res){
         var message = JSON.parse(req.params.message)
         message['source'] = req.params.uri
-        messageQueue.push(message)
+        if (messageQueue.length >= queue_size){
+            messageQueue.pop()
+        }
+        messageQueue.unshift(message)
         res.send('OK')
     })
     

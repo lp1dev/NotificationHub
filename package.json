@@ -4,6 +4,7 @@
   "description": "A global notification hub",
   "main": "server.js",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "deepstream.io-client-js": "^2.1.4",
     "express": "^4.15.2",
     "node-telegram-bot-api": "^0.27.0"

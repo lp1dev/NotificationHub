@@ -1,0 +1,7 @@
+{
+    "version": "0.0.1",
+    "deepstream_app_url": "wss://42.deepstreamhub.com?apiKey=YOURAPIKEY",
+    "port": 8080,
+    "telegram_token": "YOURTOKEN",
+    "queue_size": 42
+}

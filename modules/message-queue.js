@@ -5,12 +5,9 @@
     var _queue
     var _record
     
-    function init(DEEPSTREAM_API_KEY) {
-        //DeepstreamHub initialisation
-        _ds = deepstream(DEEPSTREAM_API_KEY)
-        _ds.login()
+    function init(ds) {
+        _ds = ds
         _record = _ds.record.getRecord('notificationhub')
-        //Queue initialisation (it should probably be a module too someday)
         _queue = []
     }
 

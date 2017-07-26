@@ -15,9 +15,9 @@
         _port = port
     }
 
-    function _dispatch(message, uri, ip) {
+    function _dispatch(message, topic, ip) {
         console.log('[+] incoming notification from', ip)
-        origin = {type: 'web', uri: uri, ip: ip}
+        origin = {type: 'web', topic: topic, ip: ip}
         for (var i = 0; i < _callbacks.length; i++) {
             _callbacks[i](message.message, origin)
         }
@@ -27,13 +27,13 @@
         res.send('Notification Hub ' + version)
     })
 
-    app.post('/message/:uri', function(req, res) {
-        _dispatch(req.body, req.params.uri, req.connection.remoteAddress)
+    app.post('/message/:topic', function(req, res) {
+        _dispatch(req.body, req.params.topic, req.connection.remoteAddress)
         res.send('OK')
     })
     
-    app.post('/message/:uri/:message', function(req, res) {
-        _dispatch(JSON.parse(req.params.message), req.params.uri, req.connection.remoteAddress)
+    app.post('/message/:topic/:message', function(req, res) {
+        _dispatch(JSON.parse(req.params.message), req.params.topic, req.connection.remoteAddress)
         res.send('OK')
     })
 

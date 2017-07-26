@@ -3,7 +3,9 @@
     const mq            = require('./modules/message-queue')
     const restApi       = require('./modules/rest-api')
     const telegramBot   = require('./modules/telegram-bot')
+    const deepstream    = require('deepstream.io-client-js')
     const config        = require('./config')
+    var topics          = {}
 
     function test() {
         var randMessage = {value: Math.random()}
@@ -15,7 +17,9 @@
     
     function init() {
         //Modules initialisation
-        mq.init(config.deepstream_app_url)
+        ds = deepstream(config.deepstream_app_url)
+        ds.login()
+        mq.init(ds)
         restApi.init(config.port)
         telegramBot.init(config.telegram_token)
         //Modules subscription

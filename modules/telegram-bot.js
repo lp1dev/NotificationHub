@@ -2,7 +2,7 @@
     const TelegramBot = require('node-telegram-bot-api')
     var _bot
     var _callbacks = []
-    var _receivers = []
+    var _topics = {'all': []}
 
     function _dispatch(message, origin) {
         for (var i = 0; i < _callbacks.length; i++) {
@@ -16,18 +16,21 @@
         _bot.onText(/subscribe (.+)/, (msg, match) => {
             console.log('[+] subscribed', msg.chat.id, 'to topic', match[1])
 	        const chatId = msg.chat.id
-            if (_receivers.indexOf(chatId) == -1) {
-                _receivers.push(chatId)
+            if (!_topics[match[1]]) {
+                _topics[match[1]] = []
+            }
+            if (_topics[match[1]].indexOf(chatId) == -1) {
+                _topics[match[1]].push(chatId)
             }
 	        const resp = "(Notification Hub) ~ You successfully subscribed to " + match[1]
 	        _bot.sendMessage(chatId, resp)
         })
         
-        _bot.onText(/notify (.+)/, (msg, match) => {
-            console.log('[+] incoming notification from', msg.chat.id)
+        _bot.onText(/notify (#\w+) (.+)/, (msg, match) => {
+            console.log('[+] incoming notification from', msg.chat.id, 'to', match[1])
 	        const chatId = msg.chat.id
-            _dispatch(match[1], {type: 'telegram', chat_id: msg.chat.id})
-	        const resp = "(Notification Hub) ~ Notification dispatched ~"
+            _dispatch(match[2], {type: 'telegram', chat_id: msg.chat.id, topic: match[1].replace('#', '')})
+	        const resp = "(Notification Hub) ~ Notification dispatched to " + match[1]
 	        _bot.sendMessage(chatId, resp)
         })
 
@@ -39,8 +42,15 @@
     }
 
     function notify(message, origin) {
-        for (var i = 0; i < _receivers.length; i++) {
-            _bot.sendMessage(_receivers[i], message.message)
+        topic = origin['topic'] || 'all'
+        if (!_topics[topic]) {
+            _topics[topic] = []
+        }
+        chatIds = _topics[topic]
+        for (var i = 0; i < chatIds.length; i++) {
+            if (chatIds[i] !== origin.chat_id) {
+                _bot.sendMessage(chatIds[i], '#' + topic + ': ' + message.message)
+            }
         }
     }
     

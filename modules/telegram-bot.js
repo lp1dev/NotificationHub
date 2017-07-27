@@ -10,7 +10,8 @@
         }
     }
     
-    function init(token) {
+    function init(token, telegramAdmin) {
+        _topics['all'].push(telegramAdmin)
         _bot = new TelegramBot(token, {polling: true})
         
         _bot.onText(/subscribe (.+)/, (msg, match) => {
@@ -46,9 +47,9 @@
         if (!_topics[topic]) {
             _topics[topic] = []
         }
-        chatIds = _topics[topic]
+        chatIds = (topic === 'all') ? _topics[topic] :_topics[topic].concat(_topics['all'])
         for (var i = 0; i < chatIds.length; i++) {
-            if (chatIds[i] !== origin.chat_id) {
+            if (chatIds[i] !== origin.chat_id && chatIds[i] !== origin.author) {
                 _bot.sendMessage(chatIds[i], '#' + topic + ': ' + message.message)
             }
         }

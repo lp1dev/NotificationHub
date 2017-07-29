@@ -28,5 +28,10 @@
         websocket.notify({message: message}, origin)
     }
 
-    init()    
+    try {
+        init()
+    }
+    catch (err) {
+        telegramBot.notify({message: 'Notification Hub Crashed, tb : ' + err}, {type: 'nfhub', topic: 'all'})
+    }
 })();
